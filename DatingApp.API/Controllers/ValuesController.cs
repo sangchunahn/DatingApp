@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
@@ -21,18 +22,26 @@ namespace DatingApp.API.Controllers
         // GET api/values
         [HttpGet]
         // IActionResult can return ok and http 200
-        public IActionResult GetValues()
+        // write async and add Task
+        public async Task<IActionResult> GetValues()
         {
-            var values = _context.Values.ToList();
+            // not scalable its needs to be asynchronous -->
+            // var values = _context.Values.ToList();
+            // return Ok(values);
+
+            // await makes it asynchronous it waits for the response
+            var values = await _context.Values.ToListAsync();
             return Ok(values);
+
+
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public IActionResult GetValue(int id)
+        public async Task<IActionResult> GetValue(int id)
         {
             // x represents value we are returning
-            var value = _context.Values.FirstOrDefault(x => x.Id == id);
+            var value = await _context.Values.FirstOrDefaultAsync(x => x.Id == id);
             return Ok(value);
         }
 
